@@ -1,0 +1,15 @@
+/Finance.xml
+/Giftcard.xml
+/Infra.xml
+/Login.xml
+/MD.xml
+/Marketing.xml
+/POS.xml
+/Support.xml
+/User.xml
+/controller/
+/dao/
+/handler/
+/model/
+/mybatis-config.xml
+/util/

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="md">
+	<!-- MD select -->
+	<select id="selectMD1Info" resultType="POS">
+		select A.sequence, C1.code_content as large_category, C2.code_content as small_category, C3.code_content as system, A.using, A.host_name, A.manufacturer, A.model_name, A.specification, A.purchase_num, A.install_name, A.install_num, A.start_date, A.deterioration, A.start_money, A.place, A.location, A.status_progress, A.contract_term, A.month_money, A.status_use, A.disuse_or_recycling, A.reason_disuse, A.note, A.unification, A.EOS_end_date
+		from data A, commonCode C0, commonCode C1, commonCode C2, commonCode C3
+		where C0.code='03' and C0.code=A.part and C0.common_group='part'
+		and C1.code=A.large_category and C1.common_group='large_category'
+		and C2.code=A.small_category and C2.common_group='small_category'
+		and C3.code=A.system and C3.common_group='system'
+		and A.approved_disuse='N'
+	</select>	
+	<!-- MD 폐기현황 select -->
+	<select id="selectMD2Info" resultType="POS">		
+		select A.sequence, C1.code_content as large_category, C2.code_content as small_category, C3.code_content as system, A.using, A.host_name, A.manufacturer, A.model_name, A.specification, A.purchase_num, A.install_name, A.install_num, A.start_date, A.deterioration, A.start_money, A.place, A.location, A.status_progress, A.contract_term, A.month_money, A.status_use, A.disuse_or_recycling, A.reason_disuse, A.note, A.unification, A.EOS_end_date
+		from data A, commonCode C0, commonCode C1, commonCode C2, commonCode C3
+		where C0.code='03' and C0.code=A.part and C0.common_group='part'
+		and C1.code=A.large_category and C1.common_group='large_category'
+		and C2.code=A.small_category and C2.common_group='small_category'
+		and C3.code=A.system and C3.common_group='system'
+		and A.approved_disuse='Y'
+	</select>	
+			
+	
+	<!-- MD insert -->
+	<insert id="insertMD1" parameterType="POS">
+		  insert into data values (#{sequence}, #{part}, #{approved_disuse}, #{large_category}, #{small_category},
+				#{system}, #{using}, #{host_name}, #{manufacturer}, #{model_name}, #{specification}, #{purchase_num},
+				#{install_name}, #{install_num}, #{start_date}, #{deterioration}, #{start_money}, #{place}, #{location},
+				#{status_progress}, #{contract_term}, #{month_money}, #{status_use}, #{disuse_or_recycling}, #{reason_disuse},
+				#{note}, #{unification}, #{EOS_end_date})
+	</insert>	
+	<!-- MD 폐기현황 insert -->
+	<insert id="insertMD2" parameterType="POS">
+		  insert into data values (#{sequence}, #{part}, #{approved_disuse}, #{large_category}, #{small_category},
+				#{system}, #{using}, #{host_name}, #{manufacturer}, #{model_name}, #{specification}, #{purchase_num},
+				#{install_name}, #{install_num}, #{start_date}, #{deterioration}, #{start_money}, #{place}, #{location},
+				#{status_progress}, #{contract_term}, #{month_money}, #{status_use}, #{disuse_or_recycling}, #{reason_disuse},
+				#{note}, #{unification}, #{EOS_end_date})
+	</insert>
+	
+	
+	<!-- MD update_disuse -->
+	<update id="updateDisuseMD1" parameterType="POS">
+		update data 
+		set approved_disuse='Y'
+		where sequence=#{sequence}
+	</update>	
+	<!-- MD 폐기현황 update_disuse -->
+	<update id="updateDisuseMD2" parameterType="POS">
+		update data 
+		set approved_disuse='N'
+		where sequence=#{sequence}
+	</update>	
+	<!-- MD update -->
+	<update id="updateMD1" parameterType="POS">
+		update data 
+		set large_category=#{large_category}, small_category=#{small_category},system=#{system}, using=#{using}, 
+			host_name=#{host_name}, manufacturer=#{manufacturer}, model_name=#{model_name}, specification=#{specification}, 
+			purchase_num=#{purchase_num},install_name=#{install_name}, install_num=#{install_num}, 
+			start_date=#{start_date}, deterioration=#{deterioration}, start_money=#{start_money}, place=#{place}, 
+			location=#{location}, status_progress=#{status_progress}, contract_term=#{contract_term}, 
+			month_money=#{month_money}, status_use=#{status_use}, disuse_or_recycling=#{disuse_or_recycling}, 
+			reason_disuse=#{reason_disuse},note=#{note}, unification=#{unification}, EOS_end_date=#{EOS_end_date}
+		where sequence=#{sequence}
+	</update>	
+	<!-- MD 폐기현황 update -->
+	<update id="updateMD2" parameterType="POS">
+		update data 
+		set large_category=#{large_category}, small_category=#{small_category},system=#{system}, using=#{using}, 
+			host_name=#{host_name}, manufacturer=#{manufacturer}, model_name=#{model_name}, specification=#{specification}, 
+			purchase_num=#{purchase_num},install_name=#{install_name}, install_num=#{install_num}, 
+			start_date=#{start_date}, deterioration=#{deterioration}, start_money=#{start_money}, place=#{place}, 
+			location=#{location}, status_progress=#{status_progress}, contract_term=#{contract_term}, 
+			month_money=#{month_money}, status_use=#{status_use}, disuse_or_recycling=#{disuse_or_recycling}, 
+			reason_disuse=#{reason_disuse},note=#{note}, unification=#{unification}, EOS_end_date=#{EOS_end_date}
+		where sequence=#{sequence}
+	</update>
+	
+	
+	<!-- MD delete -->
+	<delete id="deleteMD1" parameterType="POS">
+		delete from data where sequence=#{sequence}
+	</delete>
+	<!-- MD 폐기현황 delete -->
+	<delete id="deleteMD2" parameterType="POS">
+		delete from data where sequence=#{sequence}
+	</delete>
+	
+	
+	<!-- table sequence count -->
+	<select id="countMD" resultType="java.lang.Integer">		
+		select count(*) from data
+	</select>
+	<!-- count : data1_서버_NT -->
+	<select id="count1" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='08'
+	</select>
+	<!-- count : data2_서버_UNIX -->
+	<select id="count2" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='12'
+	</select>
+	<!-- count : data3_서버_LINUX -->
+	<select id="count3" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='06'
+	</select>
+	<!-- count : data5_서버_NT_사용장비 -->
+	<select id="count5" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='08' and status_use='사용'
+	</select>
+	<!-- count : data6_서버_UNIX_사용장비 -->
+	<select id="count6" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='12' and status_use='사용'
+	</select>
+	<!-- count : data7_서버_LINUX_사용장비 -->
+	<select id="count7" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='06' and status_use='사용'
+	</select>
+	<!-- count : data9_서버_NT_유휴장비 -->
+	<select id="count9" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='08' and status_use='미사용'
+	</select>
+	<!-- count : data10_서버_UNIX_유휴장비 -->
+	<select id="count10" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='12' and status_use='미사용'
+	</select>
+	<!-- count : data11_서버_LINUX_유휴장비 -->
+	<select id="count11" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='06' and status_use='미사용'
+	</select>
+	<!-- count : data13_서버_NT_노후장비 -->
+	<select id="count13" resultType="java.lang.Integer">		
+		select count(*) from data where (year(getdate())-year(start_date))>=7 and part='03' and approved_disuse='N' and small_category='08'
+	</select>
+	<!-- count : data14_서버_UNIX_노후장비 -->
+	<select id="count14" resultType="java.lang.Integer">		
+		select count(*) from data where (year(getdate())-year(start_date))>=7 and part='03' and approved_disuse='N' and small_category='12'
+	</select>
+	<!-- count : data15_서버_LINUX_노후장비 -->
+	<select id="count15" resultType="java.lang.Integer">		
+		select count(*) from data where (year(getdate())-year(start_date))>=7 and part='03' and approved_disuse='N' and small_category='06'	
+	</select>
+	
+	<!-- count : data17_서버_NT_센터외 -->
+	<select id="count17" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='08' and not place='UBIT' and not place='대전센터' and not place='UBiT센터' and not place='대전DR센터' and not place='대전 센터2F'
+	</select>
+	<!-- count : data18_서버_UNIX_센터외 -->
+	<select id="count18" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='12' and not place='UBIT' and not place='대전센터' and not place='UBiT센터' and not place='대전DR센터' and not place='대전 센터2F'
+	</select>
+	<!-- count : data19_서버_LINUX_센터외 -->
+	<select id="count19" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='06' and not place='UBIT' and not place='대전센터' and not place='UBiT센터' and not place='대전DR센터' and not place='대전 센터2F'
+	</select>
+	<!-- count : data21_서버_NT_단일화 -->
+	<select id="count21" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='08' and unification='O'
+	</select>
+	<!-- count : data22_서버_UNIX_단일화 -->
+	<select id="count22" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='12' and unification='O'
+	</select>
+	<!-- count : data23_서버_LINUX_단일화 -->
+	<select id="count23" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='06' and unification='O'
+	</select>
+	
+	<!-- count : data25_storage -->
+	<select id="count25" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='22'
+	</select>
+	<!-- count : data26_storage_사용장비 -->
+	<select id="count26" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='22' and status_use='사용'
+	</select>
+	<!-- count : data27_storage_유휴장비 -->
+	<select id="count27" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='22' and status_use='미사용'
+	</select>
+	<!-- count : data28_storage_노후장비 -->
+	<select id="count28" resultType="java.lang.Integer">		
+		select count(*) from data where (year(getdate())-year(start_date))>=7 and part='03' and approved_disuse='N' and small_category='22'	
+	</select>
+	<!-- count : data29_storage_센터외 -->
+	<select id="count29" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='22' and not place='UBIT' and not place='대전센터' and not place='UBiT센터' and not place='대전DR센터' and not place='대전 센터2F'
+	</select>
+	<!-- count : data30_storage_단일화 -->
+	<select id="count30" resultType="java.lang.Integer">		
+		select count(*) from data where part='03' and approved_disuse='N' and small_category='22' and unification='O'
+	</select>
+</mapper>

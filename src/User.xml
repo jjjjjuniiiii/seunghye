@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="user">
+	<select id="selectUserInfoByPK" resultType="User"  parameterType="hashmap">
+		select * from testTable where Id=#{Id}
+	</select>
+	
+
+	
+<!--  
+<select id="selectUserInfo" resultType="User"  parameterType="hashmap">
+		select * from MEMBER where memberId=#{memberId}
+	</select>
+
+	<select id="selectUserAllInfo"  resultType="User" >
+		select * from member
+	</select>
+
+
+
+	<update id="updateArticle" parameterType="Member">
+		update member set sch_emt=#{sch_emt}, sch_mid=#{sch_mid},sch_high=#{sch_high} 
+		where memberid=#{memberid} 
+	</update>
+	
+	<delete id="deleteArticle" parameterType="hashmap" >
+ 	  delete from member where memberid=#{memberid}
+   </delete> 
+	
+	<select id="login" resultType="String" parameterType="hashmap">
+		select password from member where memberid=#{memberid}
+	</select>
+	
+	
+	<insert id="insertMember" parameterType="Member">
+	insert into member(memberid, password,name,
+	birthday,sch_emt,sch_mid,sch_high, joindate, 
+	point, emtid, midid, highid) 
+	values(#{memberid},#{password},#{name},#{birthday},
+	#{sch_emt},#{sch_mid},#{sch_high},
+	sysdate,#{point},#{emtid},#{midid},#{highid})
+    </insert>
+	
+	<insert id="requestFriend" parameterType="Relation">
+	insert into relation(myid, otherid, status) 
+	values(#{myid},#{otherid},#{status})
+    </insert>
+	
+	
+    <insert id="addRequest" parameterType="hashmap">
+	insert into relation(myid, otherid, status) values(#{myid},#{otherId},#{status})
+    </insert>
+	
+	<update id="acceptRequest" parameterType="hashmap">
+		update relation set status=2 
+		where (myid=#{myId} and otherid=#{otherId}) or (myid=#{otherId} and otherid=#{myId}) 
+	</update>
+	
+	<update id="listUpdate" parameterType="Member">
+		update member set sch_emt=#{sch_emt}, sch_mid=#{sch_mid},sch_high=#{sch_high} 
+		where memberid=#{memberid} 
+	</update>
+	
+	
+	<update id="profileUpload" parameterType="Member">
+		update member set profile=#{profile}, 
+		prosize=#{prosize} where memberid=#{memberid} 
+	</update>
+		
+	<update id="backgroundUpload" parameterType="Member">
+		update member set background=#{background}, backsize=#{backsize} 
+		where memberid=#{memberid}
+	</update>	
+   
+   <select id="identifyRequest" resultType="String" parameterType="hashmap">
+	   select myid from relation where myid=#{myid} and otherid=#{otherid} and status=1
+	</select>
+	
+	<select id="getProfile" resultType="String" parameterType="hashmap">
+	 select profile from member where memberid=#{memberid} 
+	</select>
+	
+	<select id="getBackground" resultType="String" parameterType="hashmap">
+	select background from member where memberid=#{memberid}
+	</select>
+	
+   <select id="getStatus" resultType="String" parameterType="hashmap">
+	select status from relation where (myid=#{myId} and otherid=#{otherid}) 
+	or (myid=#{otherid} and otherid=#{myId})
+	</select>
+	
+	<select id="getEmtmate" resultType="Smember" parameterType="hashmap">
+	 select * from (select rownum rnum ,a.* from 
+	 (select m.name, m.birthday,m.joindate, m.memberid,
+	 m.sch_emt, m.sch_mid, m.sch_high from MEMBER m, 
+	 SCHOOL s where m.emtid=s.sid and sid=#{emtid} order by joindate desc) 
+	 a ) where rnum  between #{startRow} and #{endRow}
+	</select>
+	<select id="getMidmate" resultType="Smember" parameterType="hashmap">
+	select * from (select rownum rnum ,a.* from 
+	(select m.name, m.birthday,m.joindate, m.memberid, 
+	m.sch_emt, m.sch_mid, m.sch_high from MEMBER m,
+	SCHOOL s where m.midid=s.sid and sid=#{midid} order by joindate desc) 
+	a ) where rnum  between #{startRow} and #{endRow}
+	</select>
+	<select id="getHighmate" resultType="Smember" parameterType="hashmap">
+	select * from (select rownum rnum ,a.* from 
+	(select m.name, m.birthday,m.joindate, m.memberid,
+	m.sch_emt, m.sch_mid, m.sch_high from MEMBER m, 
+	SCHOOL s where m.highid=s.sid and sid=#{highid} 
+	order by joindate desc)a ) where rnum  between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="reqList" resultType="Member" parameterType="hashmap">
+	SELECT name, memberid from MEMBER, RELATION
+	where myid=memberid and status=1 and otherid=#{id}
+	</select>
+	
+	<select id="friendList" resultType="Member" parameterType="hashmap">
+	SELECT name, memberid FROM MEMBER WHERE MEMBERID in 
+	(SELECT otherid from relation where myid=#{id} AND status=2) OR 
+	MEMBERID in (SELECT myid from relation where otherid=#{id} AND status=2)
+	</select>
+	
+	<select id="getAllmember" resultType="Member" parameterType="hashmap">
+		select * from (select rownum rnum ,a.* from 
+		(select * from member order by joindate desc)a ) 
+		where rnum  between #{startRow} and #{endRow}
+	</select>
+		
+	<select id="emtCount" resultType="int" parameterType="hashmap">
+	select nvl(count(*),0) from 
+	(SELECT m.name, m.birthday,m.joindate 
+	from MEMBER m, SCHOOL s 
+	where m.emtid=s.sid and sid=#{emtid})
+	</select>	
+	
+	<select id="midCount" resultType="int" parameterType="hashmap">
+	select nvl(count(*),0) from 
+	(SELECT m.name, m.birthday,m.joindate 
+	from MEMBER m, SCHOOL s 
+	where m.midid=s.sid and sid=#{midid})
+	</select>
+	
+	<select id="highCount" resultType="int" parameterType="hashmap">
+	select nvl(count(*),0) from 
+	(SELECT m.name, m.birthday,m.joindate 
+	from MEMBER m, SCHOOL s 
+	where m.highid=s.sid and sid=#{highid})
+	</select>
+	
+	<select id="friendListEmt" resultType="Smember" parameterType="hashmap">
+	 	select * from (select rownum rnum ,a.* from 
+	 	(SELECT memberid,sch_emt, sch_mid, sch_high, name, birthday, joindate 
+		FROM MEMBER m, school s where m.emtid=s.sid and name=#{name} and sid=#{emtid} 
+		order by joindate desc)a ) where rnum  between #{startRow} and #{endRow}
+	</select>
+	<select id="friendListMid" resultType="Smember" parameterType="hashmap">
+	 	select * from (select rownum rnum ,a.* from 
+		(SELECT memberid,sch_emt, sch_mid, sch_high, name, birthday, joindate 
+		FROM MEMBER m, school s where m.midid=s.sid and name=#{name} and sid=#{midid}
+		order by joindate desc)a ) where rnum  between #{startRow} and #{endRow}
+	</select>
+	<select id="friendListHigh" resultType="Smember" parameterType="hashmap">
+		select * from (select rownum rnum ,a.* from 
+		(SELECT memberid,sch_emt, sch_mid, sch_high ,name, birthday, joindate
+		FROM MEMBER m, school s where m.highid=s.sid and name=#{name} and sid=#{highid} 
+		order by joindate desc)a ) where rnum  between #{startRow} and #{endRow}
+	</select>
+	
+	<select id="emtListCount" resultType="int" parameterType="hashmap">
+		SELECT nvl(count(*),0) FROM MEMBER m, 
+		school s where m.emtid=s.sid and name=#{name} and sid=#{emtid}
+	</select>	
+	
+	<select id="midListCount" resultType="int" parameterType="hashmap">
+		SELECT nvl(count(*),0) FROM MEMBER m, school s where 
+		m.midid=s.sid and name=#{name} and sid=#{midid}
+	</select>
+	
+	<select id="highListCount" resultType="int" parameterType="hashmap">
+		SELECT nvl(count(*),0) FROM MEMBER m, school s where 
+		m.highid=s.sid and name=#{name} and sid=#{highid}
+	</select>
+	
+	<select id="reqeustCount" resultType="int" parameterType="hashmap">
+		select nvl(count(*),0) from relation where otherid=#{myid}
+		and status=1
+	</select>
+	
+	<select id="getMemberCount" resultType="int">
+		select nvl(count(*),0) from member and status=1
+	</select>
+	
+	<select id="getUserInfo" resultType="Member" parameterType="hashmap">
+		select memberid, name,sch_emt, sch_mid, 
+		sch_high, birthday from member where memberid=#{memberid}
+	</select>
+	
+	<select id="getSchoolId" resultType="Member" parameterType="hashmap">
+		select emtid, midid, highid from member where memberid=#{memberid}
+	</select>
+	
+	-->
+</mapper>
